@@ -1,6 +1,6 @@
 import { 
     LayoutDashboard ,
-    Users,
+    Archive,
 } from "lucide-react"
 
 import Branch from "../../pages/(tabs)/Branch";
@@ -16,9 +16,9 @@ export const sidebarData = [
     element: <Branch />,
   },
   {
-    title: "Takım",
-    path: "/team",
-    icon: <Users size={24}/>,
+    title: "Envanter",
+    path: "/inventory",
+    icon: <Archive  size={24}/>,
     cName: "nav-text",
     element: <Team />,
   },

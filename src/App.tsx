@@ -8,6 +8,8 @@ import Login from './pages/(auth)/Login';
 import Layout from './pages/Layout';
 import Branch from './pages/(tabs)/Branch';
 import Team from './pages/(tabs)/Team';
+import Inventory from './pages/(tabs)/Inventory';
+import Setting from './pages/(tabs)/Setting';
 
 const App = () => {
   return (
@@ -19,6 +21,8 @@ const App = () => {
             <Route path="/" element={<Layout />}>
               <Route index element={<Branch />} />
               <Route path="/team" element={<Team />} />
+              <Route path="/Inventory" element={<Inventory />} />
+              <Route path="/Setting" element={<Setting />} />
               {/* sayfa ekleye bilirsin */}
             </Route>
           </Route>
