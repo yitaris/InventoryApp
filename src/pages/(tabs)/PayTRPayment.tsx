@@ -20,7 +20,7 @@ const PayTRPayment: React.FC = () => {
       no_installment: true,
       max_installment: 0,
       timeout_limit: 0,
-      test_mode: true,
+      test_mode: false,
       non_3d: "1",
       lang: "tr",
     });
