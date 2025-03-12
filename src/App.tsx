@@ -13,7 +13,6 @@ const Branch = lazy(() => import('./pages/(tabs)/Branch'));
 const Team = lazy(() => import('./pages/(tabs)/Team'));
 const Inventory = lazy(() => import('./pages/(tabs)/Inventory'));
 const Setting = lazy(() => import('./pages/(tabs)/Setting'));
-const PayTRPayment = lazy(() => import('./pages/(tabs)/PayTRPayment'));
 const Succes = lazy(() => import('./pages/(payment)/Succes'));
 const Fail = lazy(() => import('./pages/(payment)/Fail'));
 
@@ -30,7 +29,6 @@ const App = () => {
                 <Route path="/team" element={<Team />} />
                 <Route path="/Inventory" element={<Inventory />} />
                 <Route path="/Setting" element={<Setting />} />
-                <Route path="/paytr" element={<PayTRPayment />} />
                 <Route path="/succes" element={<Succes />} />
                 <Route path="/fail" element={<Fail />} />
                 {/* sayfa ekleye bilirsin */}
