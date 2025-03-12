@@ -16,7 +16,7 @@ const Setting = lazy(() => import('./pages/(tabs)/Setting'));
 const PayTRPayment = lazy(() => import('./pages/(tabs)/PayTRPayment'));
 const Succes = lazy(() => import('./pages/(payment)/Succes'));
 const Fail = lazy(() => import('./pages/(payment)/Fail'));
-
+ 
 const App = () => {
   return (
     <AuthProvider>
