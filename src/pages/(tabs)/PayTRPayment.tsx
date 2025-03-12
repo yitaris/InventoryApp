@@ -1,8 +1,16 @@
-import {  useState } from "react";
+import { useEffect, useState } from "react";
 import { PayTRClient } from "paytr-react";
+import { Buffer } from "buffer";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const PayTRPayment: React.FC = () => {
   const [token, setToken] = useState<string>("");
+  const { session, user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    window.Buffer = Buffer;
 
     const paytr = new PayTRClient({
       merchant_id: "336146",
@@ -19,12 +27,12 @@ const PayTRPayment: React.FC = () => {
 
     paytr
       .getToken({
-        merchant_oid: `Sipariş_${Date.now()}`,
+        merchant_oid: `ORDER_${Date.now()}`,
         payment_amount: 1000,
         currency: "TL",
-        email: "sdaawsdwa@gmail.com",
+        email: session?.user?.email,
         user_ip: "192.168.1.1",
-        user_name: "",
+        user_name: user?.name,
         user_phone: "05555555555",
         user_address: "Müşteri Adresi",
         user_basket: [
@@ -34,12 +42,30 @@ const PayTRPayment: React.FC = () => {
             quantity: 1,
           },
         ],
-        merchant_ok_url: "/succes",
-        merchant_fail_url: "/fail",
+        merchant_ok_url: `${window.location.origin}/succes`,
+        merchant_fail_url: `${window.location.origin}/fail`,
       })
       .then((response: { token: string }) => {
         setToken(response.token);
-      })
+      });
+  }, [session?.user?.email, user?.name]);
+
+  // Kullanıcı yönlendirildiğinde yönlendirme işlemi
+  useEffect(() => {
+    const checkUrl = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has("status")) {
+        const status = urlParams.get("status");
+        if (status === "success") {
+          navigate("/succes");
+        } else if (status === "fail") {
+          navigate("/fail");
+        }
+      }
+    };
+
+    checkUrl();
+  }, [navigate]);
 
   return (
     <div
