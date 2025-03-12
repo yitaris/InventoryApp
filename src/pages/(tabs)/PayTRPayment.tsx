@@ -11,7 +11,7 @@ const PayTRPayment: React.FC = () => {
 
   useEffect(() => {
     window.Buffer = Buffer;
- 
+  
     const paytr = new PayTRClient({
       merchant_id: "336146",
       merchant_key: "92dRwN1m5z8y1BZf",
