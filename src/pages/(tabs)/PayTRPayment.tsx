@@ -25,7 +25,6 @@ const PayTRPayment: React.FC = () => {
       lang: "tr",
     });
 
-    
     paytr
       .getToken({
         merchant_oid: `ORDER_${Date.now()}`,
