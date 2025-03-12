@@ -1,4 +1,4 @@
-import { useState, useRef, } from "react";
+import { useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate, Link } from "react-router-dom";
 import { sidebarData } from "./SidebarData";
 import { useAuth } from "../../contexts/AuthContext";
@@ -17,34 +17,48 @@ const Sidebar: React.FC = () => {
     const startX = useRef(0);
     const isDragging = useRef(false);
 
-    const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
-        startX.current = "touches" in e ? e.touches[0].clientX : e.clientX;
-        isDragging.current = true;
-        document.addEventListener("mousemove", handleMouseMove);
-        document.addEventListener("mouseup", handleMouseUp);
-        document.addEventListener("touchmove", handleMouseMove);
-        document.addEventListener("touchend", handleMouseUp);
-    };
-
-    const handleMouseMove = (e: MouseEvent | TouchEvent) => {
-        if (!isDragging.current) return;
-        const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-        const deltaX = clientX - startX.current;
-        if (deltaX > 50) {
-            setExpanded(true);
-        } else if (deltaX < -50) {
-            setExpanded(false);
-            setProfileMenu(false);
+    const handleDrag = {
+        start: (e: React.MouseEvent | React.TouchEvent) => {
+            startX.current = "touches" in e ? e.touches[0].clientX : e.clientX;
+            isDragging.current = true;
+            document.addEventListener("mousemove", handleDrag.move);
+            document.addEventListener("mouseup", handleDrag.end);
+            document.addEventListener("touchmove", handleDrag.move);
+            document.addEventListener("touchend", handleDrag.end);
+        },
+        
+        move: (e: MouseEvent | TouchEvent) => {
+            if (!isDragging.current) return;
+            
+            const clientX = "touches" in e ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX;
+            const deltaX = clientX - startX.current;
+            const threshold = 30; // Daha hassas bir eşik değeri
+            
+            if (Math.abs(deltaX) >= threshold) {
+                setExpanded(deltaX > 0);
+                if (deltaX < 0) setProfileMenu(false);
+            }
+        },
+        
+        end: () => {
+            isDragging.current = false;
+            document.removeEventListener("mousemove", handleDrag.move);
+            document.removeEventListener("mouseup", handleDrag.end);
+            document.removeEventListener("touchmove", handleDrag.move);
+            document.removeEventListener("touchend", handleDrag.end);
         }
     };
 
-    const handleMouseUp = () => {
-        isDragging.current = false;
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
-        document.removeEventListener("touchmove", handleMouseMove);
-        document.removeEventListener("touchend", handleMouseUp);
-    };
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (profileMenu && sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
+                setProfileMenu(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [profileMenu]);
 
     const handleLogout = async () => {
         await logout();
@@ -55,12 +69,14 @@ const Sidebar: React.FC = () => {
         <div className="h-screen fixed z-50 flex items-center select-none">
             <div
                 ref={sidebarRef}
-                className={`h-5/6 w-18 flex flex-col bg-[#1e1e1e] text-white shadow-xl rounded-r-xl p-2 relative transition-transform duration-300 ${expanded ? "translate-x-0" : "-translate-x-18"}`}
+                className={`h-5/6 w-18 flex flex-col bg-[#1e1e1e] text-white shadow-xl rounded-r-xl p-2 relative 
+                    transition-all duration-300 ease-in-out ${expanded ? "translate-x-0" : "-translate-x-18"}`}
             >
                 <div
-                    className="absolute top-1/2 -right-5 w-6 h-18 -translate-y-1/2 bg-[#1e1e1e] rounded-r-md flex items-center justify-center cursor-pointer"
-                    onMouseDown={handleMouseDown}
-                    onTouchStart={handleMouseDown}
+                    className="absolute top-1/2 -right-5 w-6 h-18 -translate-y-1/2 bg-[#1e1e1e] rounded-r-md 
+                        flex items-center justify-center cursor-grab active:cursor-grabbing"
+                    onMouseDown={handleDrag.start}
+                    onTouchStart={handleDrag.start}
                 >
                     <div className="w-1 h-8 bg-gray-400 rounded"></div>
                 </div>

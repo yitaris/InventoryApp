@@ -1,33 +1,44 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { lazy, Suspense } from 'react';
 
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import { PublicRoute } from './routes/PublicRoute';
-
-import Login from './pages/(auth)/Login';
 import Layout from './pages/Layout';
-import Branch from './pages/(tabs)/Branch';
-import Team from './pages/(tabs)/Team';
-import Inventory from './pages/(tabs)/Inventory';
-import Setting from './pages/(tabs)/Setting';
+
+
+// Lazy loading ile sayfa bileşenlerini yükleme
+const Login = lazy(() => import('./pages/(auth)/Login'));
+const Branch = lazy(() => import('./pages/(tabs)/Branch'));
+const Team = lazy(() => import('./pages/(tabs)/Team'));
+const Inventory = lazy(() => import('./pages/(tabs)/Inventory'));
+const Setting = lazy(() => import('./pages/(tabs)/Setting'));
+const PayTRPayment = lazy(() => import('./pages/(tabs)/PayTRPayment'));
+const Succes = lazy(() => import('./pages/(payment)/Succes'));
+const Fail = lazy(() => import('./pages/(payment)/Fail'));
 
 const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <Routes>
-          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Branch />} />
-              <Route path="/team" element={<Team />} />
-              <Route path="/Inventory" element={<Inventory />} />
-              <Route path="/Setting" element={<Setting />} />
-              {/* sayfa ekleye bilirsin */}
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Branch />} />
+                <Route path="/team" element={<Team />} />
+                <Route path="/Inventory" element={<Inventory />} />
+                <Route path="/Setting" element={<Setting />} />
+                <Route path="/paytr" element={<PayTRPayment />} />
+                <Route path="/succes" element={<Succes />} />
+                <Route path="/fail" element={<Fail />} />
+                {/* sayfa ekleye bilirsin */}
+              </Route>
             </Route>
-          </Route>
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Suspense>
       </Router>
     </AuthProvider>
   );

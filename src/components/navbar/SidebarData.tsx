@@ -22,4 +22,11 @@ export const sidebarData = [
     cName: "nav-text",
     element: <Team />,
   },
+  {
+    title: "Paytr",
+    path: "/paytr",
+    icon: <Archive  size={24}/>,
+    cName: "nav-text",
+    element: <Team />,
+  },
 ];
