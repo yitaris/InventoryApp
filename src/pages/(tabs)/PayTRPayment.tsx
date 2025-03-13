@@ -24,7 +24,7 @@ const PayTRPayment: React.FC = () => {
           no_installment: true,
           max_installment: 0,
           timeout_limit: 0,
-          test_mode: true,
+          test_mode: false,
           non_3d: "1",
           lang: "tr",
         });
@@ -94,6 +94,7 @@ const PayTRPayment: React.FC = () => {
           width="100%"
           height="100%"
           style={{ border: "none", background: "transparent" }}
+          onLoad={() => console.log("PayTR iframe loaded successfully")}
         />
       ) : (
         <p className="text-2xl text-white">Ödeme sayfası yükleniyor...</p>
