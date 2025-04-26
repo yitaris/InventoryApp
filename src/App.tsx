@@ -7,7 +7,7 @@ import { PublicRoute } from './routes/PublicRoute';
 import Layout from './pages/Layout';
 
 
-// Lazy loading ile sayfa bileşenlerini yükleme
+// Lazy loading ile sayfa bileşenlerini yükleme right
 const Login = lazy(() => import('./pages/(auth)/Login'));
 const Branch = lazy(() => import('./pages/(tabs)/Branch'));
 const Team = lazy(() => import('./pages/(tabs)/Team'));
